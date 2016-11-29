@@ -8,12 +8,12 @@ Working on maven repository
  
 Usage
 -----
-1. Download and import it. Right now you can do it manually
-2. Add permissions
+* Download and import it. Right now you can do it manually
+* Add permissions
 ```xml
 <uses-permission android:name="android.permission.RECORD_AUDIO" />
 ```
-3. Use it
+* Use it
 ```java
     compositeDisposable = new CompositeDisposable();
 
@@ -28,7 +28,7 @@ Usage
             .observeOn(Schedulers.newThread())
             .subscribeWith(player));
 ```
-4. Don't forget to unsubscribe
+* Don't forget to unsubscribe
 ```java
     if (!compositeDisposable.isDisposed()) {
       compositeDisposable.dispose();
