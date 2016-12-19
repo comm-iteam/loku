@@ -9,16 +9,43 @@ import android.os.Process;
 
 import io.reactivex.subscribers.DisposableSubscriber;
 
-
+/**
+ * A {@link Player} that plays audio in reactive extensions fashion.<P>
+ * Just create the {@link Player} object and subscribe it to a {@link Recorder} object.
+ * <pre>
+ *   {@code
+ *
+ *   Player player = new Player(getApplicationContext());
+ *   compositeDisposable.add(
+ *     recorder.getAudioFlowable()
+ *       .observeOn(Schedulers.newThread())
+ *       .subscribeWith(player));
+ *   }
+ * </pre>
+ */
 public class Player extends DisposableSubscriber<short[]> {
 
   private AudioPlayerState audioPlayerState;
 
-  public Player(Context context){
+  /**
+   * Creates a player with default audio settings
+   *
+   * @param context the app {@link Context}
+   */
+  public Player(Context context) {
     this(context, 0, AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT,
         AudioManager.STREAM_VOICE_CALL);
   }
 
+  /**
+   * Create a {@link Player} with these audio params
+   *
+   * @param context        the app {@link Context}
+   * @param sampleRateInHz sample rate in Hz
+   * @param channelConfig channel config as defined in {@link AudioTrack}
+   * @param audioFormat audio format as defined in {@link AudioTrack}
+   * @param streamType stream type ad defined in {@link AudioTrack}
+   */
   public Player(Context context, int sampleRateInHz, int channelConfig,
                 int audioFormat, int streamType) {
     audioPlayerState = new AudioPlayerState(context, sampleRateInHz, channelConfig, audioFormat,

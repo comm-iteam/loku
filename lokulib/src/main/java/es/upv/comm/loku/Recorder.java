@@ -5,6 +5,7 @@ import android.content.Context;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioRecord;
+import android.media.AudioTrack;
 import android.media.MediaRecorder;
 import android.os.Build;
 
@@ -16,6 +17,19 @@ import io.reactivex.processors.PublishProcessor;
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subscribers.DisposableSubscriber;
 
+/**
+ * A {@link Recorder} records audio in reactive extensions fashion.<P>
+ * The {@link Recorder} instance starts recording audio as soon it is created
+ * <pre>
+ *   {@code
+ *
+ *    Recorder recorder = new Recorder(getApplicationContext());
+ *    compositeDisposable.add(recorder);
+ *   }
+ * </pre>
+ *
+ * Remember to unsubscribe it once do don't use it anymore
+ */
 public class Recorder implements Disposable {
 
   private PublishProcessor<short[]> publishProcessor;
@@ -23,11 +37,25 @@ public class Recorder implements Disposable {
 
   private AudioRecorderState audioRecorderState;
 
+  /**
+   * Creates a {@link Recorder} with default audio settings
+   *
+   * @param context the app {@link Context}
+   */
   public Recorder(Context context) {
     this(context, 0, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT,
         MediaRecorder.AudioSource.MIC);
   }
 
+  /**
+   * Creates a {@link Recorder} with these audio settings
+   *
+   * @param context        the app {@link Context}
+   * @param sampleSizeInHz the number of samples of each buffer
+   * @param channelConfig  channel config as defined in {@link AudioTrack}
+   * @param audioFormat    audio format as defined in {@link AudioTrack}
+   * @param audioSource    audio source ad define in {@link android.media.MediaRecorder.AudioSource}
+   */
   public Recorder(Context context, int sampleSizeInHz, int channelConfig, int audioFormat,
                   int audioSource) {
     audioRecorderState = new AudioRecorderState(context, sampleSizeInHz, channelConfig, audioFormat,
@@ -82,10 +110,18 @@ public class Recorder implements Disposable {
     return publishProcessorDisposable.isDisposed();
   }
 
+  /**
+   * Gets the sample rate used for the recording
+   * @return the sample rate
+   */
   public int getSampleRate() {
     return audioRecorderState.getSampleRate();
   }
 
+  /**
+   * Gets the size of each sample
+   * @return the size of the recorded samples
+   */
   public int getSampleSize() {
     return audioRecorderState.getSampleSize();
   }
