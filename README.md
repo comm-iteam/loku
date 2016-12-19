@@ -4,7 +4,10 @@ Loku is a simple audio stream API for Android using rxjava 2
 
 Download
 --------
-Working on maven repository
+You can import the Loku library from Maven using:
+```
+compile 'es.upv.comm:loku:0.0.1'
+```
  
 Usage
 -----
